@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+  <meta charset="UTF-8">
+    <title>
+	   App Web 
+    </title>
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style type="text/css">
+		  .boton_personalizado{
+		    text-decoration: none;
+		    padding: 10px;
+		    font-weight: 600;
+		    font-size: 20px;
+		    color: #ffffff;
+		    background-color: #1883ba;
+		    border-radius: 6px;
+		    border: 2px solid #0016b0;
+		  }
+		  .boton_personalizado:hover{
+		    color: #1883ba;
+		    background-color: #ffffff;
+		  }
+	</style>
+
+ 		
+</head>  
+     
+<body class="font-cover" id="main">
+
+	<h1><center>App Web con Fonegab y Cordova</center></h1>
+
+	<div>
+		<center><a href="datos.html" class="boton_personalizado">Ingresar Datos</a></center>
+	</div>
+	<br>
+	<br>
+	<div>
+		<center><a href="" class="boton_personalizado">Tomar Fotos</a></center>
+	</div>
+	<br> 
+	<br>
+	<div>
+		<center><a href="" class="boton_personalizado">Ver Contastos</a></center>
+	</div>	 
+</body>
+
+
+
+
+  <script type="text/javascript"
+    src="js/jquery-3.3.1.js"></script>
+
+  <script type="text/javascript">  
+   $(document).ready(function(){
+    $('.tooltipped').tooltip({delay:10});
+
+
+            $("#login").click(function(){
+
+               var datos=[];
+                  datos.push({
+                    "operacion": "login",
+                    "usuario": $("#username").val(), 
+                    "contraseña": $("#password").val()
+                  }); 
+              var usuario = {"datos": datos};   
+              var json = JSON.stringify(usuario);
+
+              ajax("http://192.168.1.14/ActualizacionFinal/WebContent/servidor/login.php", {"json": json}).done(function(info) {
+                  console.log(info);
+                if (info == "1") {
+                  //window.open=""; 
+
+                   window.location.href="WebContent/usuario/inicio.html";
+
+                }
+                if (info == "2") {
+                  window.open="WebContent/administrador/inicio.html";
+                }
+                if (info == "0"){
+                  Materialize.toast("Usuario o Contraseña Incorrectos", 300,'',function(){    
+                  });     
+                   window.location.href="WebContent/registro.html";
+                }
+              });
+
+              return false;
+              
+          });
+
+   }); 
+       function ajax(url, data){
+
+            var ajax = $.ajax({
+                "url": url,
+                "data": data,
+                "type": "POST",
+
+              
+              });
+               return ajax;
+
+          }
+
+
+  </script> 
+
+</body>
+</html>

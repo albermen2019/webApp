@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+  <meta charset="UTF-8">
+    <title>
+	   App Web 
+    </title>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style type="text/css">
+		  .boton_personalizado{
+		    text-decoration: none;
+		    padding: 10px;
+		    font-weight: 600;
+		    font-size: 20px;
+		    color: #ffffff;
+		    background-color: #1883ba;
+		    border-radius: 6px;
+		    border: 2px solid #0016b0;
+		  }
+		  .boton_personalizado:hover{
+		    color: #1883ba;
+		    background-color: #ffffff;
+		  }
+	</style>
+
+ 		
+</head>  
+     
+<body class="font-cover" id="main">
+
+	<h1><center>App Web con Fonegab y Cordova</center></h1>
+	<center>
+	<div>
+		<input type="hidden" name="id" id="id" value="">
+		<label>Nombre: </label>
+		<br>
+		<input type="text" name="nombre" id="nombre">
+	</div>
+	<br>
+	<br>
+	<div>
+		<label>Apellido: </label>
+		<br>
+		<input type="text" name="apellido" id="apellido">
+	</div>
+	<br>
+	<br>
+	<div>
+		<label>Edad: </label>
+		<br>
+		<input type="text" name="edad" id="edad">
+	</div>
+	</center>	
+	<br> 
+	<br>
+	<div>
+		<center><input type="button" class="boton_personalizado" id="guardar" value="Guardar"></center>
+	</div>	 
+	<br> 
+	<br>
+	<div>
+		<center><input type="button" class="boton_personalizado" id="actualizar" value="Actualizar"></center>
+	</div>	
+	<br> 
+	<br>
+	<div>
+		<center><input type="button" class="boton_personalizado" id="eliminar" value="Eliminar"></center>
+	</div>	 
+	<br> 
+	<br>	
+	<div>
+		<center><a href="index.html" class="boton_personalizado">Regresar</a></center>
+	</div>
+	<br> 
+	<br>
+	<br> 
+	<br>			
+</body>
+
+
+
+
+  <script type="text/javascript"
+    src="js/jquery-3.3.1.js"></script>
+
+  <script type="text/javascript">  
+   $(document).ready(function(){
+
+               var datos=[];
+                  datos.push({
+                    "operacion": "ver"
+                  }); 
+              var usuario = {"datos": datos};   
+              var json = JSON.stringify(usuario);
+              //console.log(json);
+              //return false;
+
+              ajax("http://192.168.43.198/final/php/gestion_datos.php", {"json": json}).done(function(info) {
+
+                if (info) {
+                 	var obj = jQuery.parseJSON(info);
+                 	if (obj.length > 0) {
+                 		for (var i = 0; i < obj.length; i++) {
+                 			   var id = obj[i]["id"];
+			                   var nombre = obj[i]["nombre"];
+			                   var apellido = obj[i]["apellido"];
+			                   var edad = obj[i]["edad"];
+			                   $("#nombre").val(nombre);
+			                   $("#apellido").val(apellido); 
+			                   $("#edad").val(edad);   
+			                   $("#id").val(id);                  				
+                 			}	
+                 		$("#guardar").hide();	
+                 	}
+
+                   
+                }
+              });
+
+
+
+            $("#guardar").click(function(){
+
+            	if ($("#nombre").val() == "" || $("#apellido").val() == "" || $("#edad").val() == "") {
+            		alert("Complete los campos");
+            	}else{    
+
+	               var datos=[];
+	                  datos.push({
+	                    "operacion": "guardar",
+	                    "nombre": $("#nombre").val(), 
+	                    "apellido": $("#apellido").val(),
+	                    "edad": $("#edad").val()
+	                  }); 
+	              var usuario = {"datos": datos};   
+	              var json = JSON.stringify(usuario);
+	              //console.log(json);
+	              //return false;
+
+	              ajax("http://192.168.43.198/final/php/gestion_datos.php", {"json": json}).done(function(info) {
+
+	                if (info) {
+						alert("Error al Ingresar");
+	                   
+	                }else{
+	                	alert("Datos Ingresados correctamente");
+	                }
+	                location.reload(true);
+	              });
+
+	              return false;
+
+            	}        	
+
+
+              
+          });
+
+            $("#actualizar").click(function(){
+            	if ($("#id").val() == "" || $("#nombre").val() == "" || $("#apellido").val() == "" || $("#edad").val() == "") {
+            		alert("Complete los campos o agregue un registro");
+            	}else{
+
+	               var datos=[];
+	                  datos.push({
+	                    "operacion": "actualizar",
+	                    "nombre": $("#nombre").val(), 
+	                    "apellido": $("#apellido").val(),
+	                    "edad": $("#edad").val(),
+	                    "id": $("#id").val()
+	                  }); 
+	              var usuario = {"datos": datos};   
+	              var json = JSON.stringify(usuario);
+	              console.log(json);
+	              //return false;
+
+	              ajax("http://192.168.43.198/final/php/gestion_datos.php", {"json": json}).done(function(info) {
+	              	console.log(info);
+	                if (info) {
+						
+	                   alert("Datos Actualizados correctamente");
+	                }else{
+	                	alert("Error al Actualizar");
+	                }
+	                location.reload(true);
+	              });
+
+	              return false;            		
+
+            	}
+
+
+              
+          });
+
+            $("#eliminar").click(function(){
+
+            	if ($("#id").val() == "" || $("#nombre").val() == "" || $("#apellido").val() == "" || $("#edad").val() == "") {
+            		alert("Complete los campos o agregue un registro");
+            	}else{
+	               var datos=[];
+	                  datos.push({
+	                    "operacion": "eliminar",
+	                    "id": $("#id").val()
+	                  }); 
+	              var usuario = {"datos": datos};   
+	              var json = JSON.stringify(usuario);
+	              console.log(json);
+	              //return false;
+
+	              ajax("http://192.168.43.198/final/php/gestion_datos.php", {"json": json}).done(function(info) {
+	              	console.log(info);
+	                if (info) {
+						alert("Error al Eliminar");
+	                   
+	                }else{
+	                	alert("Datos Eliminados correctamente");
+	                }
+	                location.reload(true);
+	              });
+
+	              return false;
+            	}            	
+
+
+              
+          });
+
+
+   }); 
+       function ajax(url, data){
+
+            var ajax = $.ajax({
+                "url": url,
+                "data": data,
+                "type": "POST",
+
+              
+              });
+               return ajax;
+
+          }
+
+
+  </script> 
+
+</body>
+</html>
